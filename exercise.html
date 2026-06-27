@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exercise</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="box">
+<h2>🏃 Exercise Plan</h2>
+
+<select id="time">
+<option value="20">20 Minutes</option>
+<option value="30">30 Minutes</option>
+<option value="60">1 Hour</option>
+</select>
+
+<button onclick="exercise()">Show Plan</button>
+
+<p id="plan"></p>
+
+<button onclick="downloadPDF()">📄 Download PDF</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

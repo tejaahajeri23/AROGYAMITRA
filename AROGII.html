@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ArogyaMitra Pro</title>
+
+<style>
+html{scroll-behavior:smooth}
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#ffd6e7,#bde0fe,#caffbf,#fff3b0);
+}
+
+/* TOP BAR */
+.nav{
+background:linear-gradient(90deg,#ff69b4,#4ea8de,#80ed99,#ffd60a);
+padding:15px;
+color:white;
+font-weight:bold;
+text-align:center;
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+height:100%;
+width:220px;
+background:#4ea8de;
+padding-top:60px;
+}
+
+.sidebar a{
+display:block;
+padding:15px;
+color:white;
+text-decoration:none;
+cursor:pointer;
+}
+
+.sidebar a:hover{
+background:#ff69b4;
+}
+
+/* MAIN */
+.main{
+margin-left:230px;
+padding:20px;
+}
+
+/* CARD */
+.card{
+background:white;
+padding:20px;
+margin-top:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* INPUT */
+input,select,button{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+button{
+background:#ff69b4;
+color:white;
+cursor:pointer;
+}
+
+/* NAV BUTTONS */
+.navButtons{
+display:flex;
+justify-content:space-between;
+margin-top:10px;
+}
+
+.smallBtn{
+width:120px;
+border-radius:25px;
+}
+
+/* PAGES */
+.page{
+display:none;
+opacity:0;
+transform:translateX(30px);
+transition:0.5s;
+}
+
+.active{
+display:block;
+opacity:1;
+transform:translateX(0);
+}
+
+/* BOX */
+.box{
+padding:10px;
+border-radius:10px;
+margin:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="nav">🌿 AROGYAMITRA PRO – HEALTH DASHBOARD</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<a onclick="show('p1')">🏠 Home</a>
+<a onclick="show('p2')">📝 Registration</a>
+<a onclick="show('p3')">⚡ Calorie Meter</a>
+<a onclick="show('p4')">🥗 Diet</a>
+<a onclick="show('p5')">🏃 Workout</a>
+<a onclick="show('p6')">📄 Report</a>
+</div>
+
+<div class="main">
+
+<!-- PAGE 1 -->
+<div class="card page active" id="p1">
+<h2>Welcome 👋</h2>
+<p>Health Assistant for Diet & Fitness</p>
+<div class="navButtons">
+<span></span>
+<button class="smallBtn" onclick="show('p2')">Next ➜</button>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="card page" id="p2">
+<h2>Registration</h2>
+
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="age" placeholder="Age">
+
+<input id="weight" placeholder="Weight (kg)">
+<input id="height" placeholder="Height (cm)">
+
+<select id="gender" onchange="femaleMode()">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+<select id="fmode" style="display:none">
+<option>General</option>
+<option>Pregnancy</option>
+<option>Period</option>
+</select>
+
+<div class="navButtons">
+<button class="smallBtn" onclick="show('p1')">⬅ Prev</button>
+<button class="smallBtn" onclick="calculate()">Next ➜</button>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="card page" id="p3">
+<h2>⚡ CALORIE METER</h2>
+
+<p id="result"></p>
+<div id="calorieBox"></div>
+
+<div class="navButtons">
+<button class="smallBtn" onclick="show('p2')">⬅ Prev</button>
+<button class="smallBtn" onclick="show('p4')">Next ➜</button>
+</div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="card page" id="p4">
+<h2>🥗 DIET PLAN</h2>
+<p id="diet"></p>
+
+<div class="navButtons">
+<button class="smallBtn" onclick="show('p3')">⬅ Prev</button>
+<button class="smallBtn" onclick="show('p5')">Next ➜</button>
+</div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="card page" id="p5">
+<h2>🏃 WORKOUT PLAN</h2>
+<p id="workout"></p>
+
+<div class="navButtons">
+<button class="smallBtn" onclick="show('p4')">⬅ Prev</button>
+<button class="smallBtn" onclick="show('p6')">Next ➜</button>
+</div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="card page" id="p6">
+<h2>📄 FINAL REPORT</h2>
+<button onclick="downloadPDF()">Download PDF</button>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+
+function show(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+function femaleMode(){
+fmode.style.display = (gender.value=="Female") ? "block" : "none";
+}
+
+function getDiet(bmi){
+
+if(bmi < 18.5){
+return "Weight Gain: Milk, Banana Shake, Paneer, Rice, Peanut Butter, Dry Fruits";
+}
+else if(bmi > 25){
+return "Weight Loss: Oats, Salad, Fruits, Soup, Green Tea, Eggs, Sprouts";
+}
+else{
+return "Maintain: Roti, Dal, Rice, Vegetables, Fruits, Yogurt, Nuts";
+}
+
+}
+
+function calculate(){
+
+let w=+weight.value;
+let h=+height.value;
+let a=+age.value;
+
+let bmi=(w/((h/100)**2)).toFixed(1);
+let bmr=10*w+6.25*h-5*a+5;
+
+result.innerHTML=`📊 BMI: ${bmi}<br>🔥 BMR: ${Math.round(bmr)} kcal`;
+
+// CALORIE OPTIONS
+let maintain=Math.round(bmr);
+let lose=Math.round(bmr-400);
+let gain=Math.round(bmr+400);
+
+calorieBox.innerHTML=`
+<div class="box" style="background:#caffbf">Maintain: ${maintain} kcal</div>
+<div class="box" style="background:#ffd6e7">Lose: ${lose} kcal</div>
+<div class="box" style="background:#bde0fe">Gain: ${gain} kcal</div>
+`;
+
+// DIET
+diet.innerHTML = getDiet(bmi);
+
+// WORKOUT
+if(gender.value=="Female" && fmode.value=="Pregnancy"){
+workout.innerHTML="Walking, Prenatal Yoga, Breathing, Stretching, Meditation";
+}
+else if(gender.value=="Female" && fmode.value=="Period"){
+workout.innerHTML="Butterfly Exercise, Light Walking, Yoga, Meditation, Breathing";
+}
+else{
+workout.innerHTML=
+"MON: Squats 3x15<br>TUE: Pushups 3x10<br>WED: Yoga 20min<br>THU: Lunges 3x15<br>FRI: Cardio<br>SAT: Abs<br>SUN: Rest";
+}
+
+show('p3');
+}
+
+function downloadPDF(){
+
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
+
+doc.text("ArogyaMitra Health Report",20,20);
+doc.text("Name: "+name.value,20,40);
+doc.text("Email: "+email.value,20,50);
+doc.text(result.innerText,20,70);
+doc.text("Diet: "+diet.innerText,20,110);
+doc.text("Workout: "+workout.innerText,20,150);
+
+doc.save("ArogyaMitra_Report.pdf");
+}
+
+</script>
+
+</body>
+</html>

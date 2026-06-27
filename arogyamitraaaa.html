@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ArogyaMitra Pro</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg,#89f7fe,#66a6ff);
+    text-align:center;
+}
+
+.box {
+    background:white;
+    width:340px;
+    margin:40px auto;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+input, select, button {
+    width:85%;
+    padding:10px;
+    margin:8px;
+    border-radius:8px;
+}
+
+button {
+    background:#ff7b00;
+    color:white;
+    border:none;
+}
+
+h2 {color:#333;}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🌿 ArogyaMitra</h2>
+
+
+<div id="s1">
+<input id="name" placeholder="Name">
+<input id="age" type="number" placeholder="Age">
+<button onclick="next1()">Next</button>
+</div>
+
+
+<div id="s2" style="display:none;">
+<input id="weight" type="number" placeholder="Weight (kg)">
+<input id="height" type="number" placeholder="Height (cm)">
+<select id="gender">
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+<button onclick="next2()">Next</button>
+</div>
+
+
+<div id="s3" style="display:none;">
+<h3>🔥 Calorie & Workout</h3>
+<p id="cal"></p>
+<p id="goal"></p>
+<button onclick="next3()">Next</button>
+</div>
+
+
+<div id="s4" style="display:none;">
+<h3>🥗 Diet Plan</h3>
+<p id="diet"></p>
+<button onclick="next4()">Next</button>
+</div>
+
+
+<div id="s5" style="display:none;">
+<h3>🏃 Exercise Plan</h3>
+<select id="time">
+<option value="20">20 Minutes</option>
+<option value="30">30 Minutes</option>
+<option value="60">1 Hour</option>
+</select>
+<button onclick="showExercise()">Show</button>
+<p id="exercise"></p>
+
+<button onclick="downloadPDF()">📄 Download PDF</button>
+</div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+let user = {};
+
+function next1(){
+    user.name = document.getElementById("name").value;
+    user.age = document.getElementById("age").value;
+
+    document.getElementById("s1").style.display="none";
+    document.getElementById("s2").style.display="block";
+}
+
+function next2(){
+    user.weight = parseFloat(document.getElementById("weight").value);
+    user.height = parseFloat(document.getElementById("height").value);
+    user.gender = document.getElementById("gender").value;
+
+    
+    let bmr;
+    if(user.gender=="male")
+        bmr = 10*user.weight + 6.25*user.height - 5*user.age + 5;
+    else
+        bmr = 10*user.weight + 6.25*user.height - 5*user.age - 161;
+
+    user.maintain = Math.round(bmr);
+    user.lose = Math.round(bmr - 400);
+    user.gain = Math.round(bmr + 400);
+
+    document.getElementById("cal").innerHTML =
+        "Maintain: "+user.maintain+" kcal<br>"+
+        "Weight Loss: "+user.lose+" kcal<br>"+
+        "Weight Gain: "+user.gain+" kcal";
+
+    document.getElementById("goal").innerHTML =
+        "👉 Suggested: Cardio + Strength Training";
+
+    document.getElementById("s2").style.display="none";
+    document.getElementById("s3").style.display="block";
+}
+
+function next3(){
+    user.diet =
+    "🔹 Weight Loss: Oats + Salad + Fruits<br>"+
+    "🔹 Maintain: Roti + Dal + Vegetables<br>"+
+    "🔹 Weight Gain: Rice + Paneer + Banana + Milk";
+
+    document.getElementById("diet").innerHTML = user.diet;
+
+    document.getElementById("s3").style.display="none";
+    document.getElementById("s4").style.display="block";
+}
+
+function next4(){
+    document.getElementById("s4").style.display="none";
+    document.getElementById("s5").style.display="block";
+}
+
+function showExercise(){
+    let t = document.getElementById("time").value;
+
+    let plan="";
+    if(t==20) plan="Stretching + Walking + Light Yoga";
+    if(t==30) plan="Jogging + Squats + Pushups";
+    if(t==60) plan="Full Body Workout + Cardio + Abs";
+
+    user.exercise = plan;
+
+    document.getElementById("exercise").innerHTML = plan;
+}
+
+async function downloadPDF(){
+    const { jsPDF } = window.jspdf;
+    let doc = new jsPDF();
+
+    doc.text("ArogyaMitra Report", 20,20);
+
+    doc.text("Name: "+user.name, 20,40);
+    doc.text("Age: "+user.age, 20,50);
+    doc.text("Weight: "+user.weight, 20,60);
+    doc.text("Height: "+user.height, 20,70);
+
+    doc.text("Calories:", 20,90);
+    doc.text("Maintain: "+user.maintain, 20,100);
+    doc.text("Loss: "+user.lose, 20,110);
+    doc.text("Gain: "+user.gain, 20,120);
+
+    doc.text("Exercise: "+user.exercise, 20,140);
+
+    doc.save("ArogyaMitra_Report.pdf");
+}
+</script>
+
+</body>
+</html>
